@@ -8,3 +8,4 @@ fi
 
 apt update && apt upgrade -y
 
+for file in "$PWD"/sbin/*; do cp "$file" /sbin && chmod +x "/sbin/$(basename "$file")"; done
