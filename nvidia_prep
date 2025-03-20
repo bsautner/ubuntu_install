@@ -9,7 +9,8 @@ apt install --reinstall build-essential dkms linux-headers-$(uname -r) wget -y
 bash -c "echo 'blacklist nouveau' > /etc/modprobe.d/blacklist-nouveau.conf"
 bash -c "echo 'options nouveau modeset=0' >> /etc/modprobe.d/blacklist-nouveau.conf"
 update-initramfs -u
-apt install libc6:i386 libvulkan1
+apt install libc6:i386 libvulkan1 --install-suggests
 rm -rf /lib/modules/$(uname -r)/build/* && sudo apt install --reinstall linux-headers-$(uname -r)
-
+apt autoremove
+apt clean
 #reboot
