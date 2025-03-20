@@ -1,0 +1,150 @@
+#!/bin/bash
+#
+# Reinstall / restore script for Ubuntu (server + KDE Plasma environment).
+# NOTE: Adjust local paths, tokens, and file references as necessary.
+
+# Ensure the script is run as root
+if [ "$EUID" -ne 0 ]; then
+    echo "Please run as root."
+    exit 1
+fi
+
+################################################################################
+# 1. Add Repositories (ProtonVPN, Charles Proxy, Google Chrome if local .deb)
+################################################################################
+
+
+# Update package lists
+echo "Updating package lists..."
+apt update
+
+################################################################################
+# 2. Install Packages by Category
+################################################################################
+
+# --- KDE Plasma Core Packages ---
+echo "Installing KDE Plasma Desktop environment..."
+apt install -y \
+    kde-plasma-desktop \
+    sddm \
+    konsole \
+    dolphin \
+    systemsettings \
+    kde-config-screenlocker \
+    kwin-x11 \
+    plasma-workspace \
+    plasma-discover \
+    plasma-discover-backend-snap \
+    plasma-nm \
+    plasma-pa \
+    powerdevil
+
+# --- Additional KDE Utilities & Tools ---
+apt install -y \
+    ksystemstats \
+    libksysguard-bin \
+    bluedevil \
+    kde-spectacle \
+    ark \
+    kate \
+    kwalletmanager \
+    partitionmanager
+
+# --- Audio / Bluetooth ---
+apt install -y \
+    alsa-utils \
+    pulseaudio-module-bluetooth \
+    libpulse0 \
+    pipewire \
+    bluez \
+    bluez-tools
+
+# --- Networking & Printing ---
+apt install -y \
+    NetworkManager \
+    avahi-daemon \
+    dnsmasq-base \
+    dhcpcd-base \
+    cups \
+    cups-bsd \
+    cups-client \
+    hplip
+
+# --- Nvidia / Graphics ---
+apt install -y \
+    nvidia-settings \
+    mesa-utils
+
+# --- General Utilities ---
+apt install -y \
+    curl \
+    wget \
+    git \
+    bash-completion \
+    gnupg \
+    pinentry-qt \
+    fonts-dejavu \
+    fonts-noto-core \
+    fonts-ubuntu \
+    x11-xserver-utils \
+    htop \
+    gedit \
+    pixz \
+    cpulimit \
+    rmlint
+
+
+
+apt install shellcheck
+
+
+# --- Java ---
+apt install -y openjdk-21-jdk
+
+echo "export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64" | sudo tee -a /etc/environment
+source /etc/environment
+echo $JAVA_HOME
+
+
+pro attach C13ubkDHJHD9xQcnZB6SXNREvy7LmR || true
+
+apt-get install linux-tools-common linux-tools-$(uname -r)
+
+
+################################################################################
+# 5. Disable systemd-networkd, Enable NetworkManager
+################################################################################
+systemctl stop systemd-networkd
+systemctl disable systemd-networkd
+systemctl mask systemd-networkd
+
+systemctl enable NetworkManager
+systemctl start NetworkManager
+
+################################################################################
+# 7. Set SDDM as the default display manager
+################################################################################
+echo "Setting SDDM as the default display manager..."
+echo "/usr/bin/sddm" > /etc/X11/default-display-manager
+systemctl enable sddm
+
+
+git config --global user.email "bsautner@gmail.com"
+git config --global user.name "Benjamin Sautner"
+git co
+apt install fail2ban
+
+echo "****TODO: Run set_nopass_sudo"
+
+
+################################################################################
+# 9. Reboot Prompt
+################################################################################
+echo "Installation complete! Reboot your system to start KDE Plasma."
+read -p "Would you like to reboot now? (y/n): " choice
+if [[ "$choice" == "y" || "$choice" == "Y" ]]; then
+    reboot
+else
+    echo "Please reboot manually to apply changes."
+fi
+#echo "kernel.split_lock_detect=off" >> /etc/sysctl.conf
